@@ -21,9 +21,9 @@ class TodoListApp(tk.Tk):
         self.todo_input.insert(0, "Enter your tasks here...")
 
     
-        self.todo_input.bind("<FocusIn>", self.clear_placeholder)
+        self.todo_input.bind("<FocusIn>", self.empty_placeholder)
 
-        self.todo_input.bind("<FocusOut>", self.restore_placeholder)
+        self.todo_input.bind("<FocusOut>", self.fill_placeholder)
 
         ttk.Button(self, text="Add", command=self.add_task).pack(pady=5)
 
@@ -31,16 +31,16 @@ class TodoListApp(tk.Tk):
         self.todo_list = tk.Listbox(self, font=("Times New Roman", 16), height=10, selectmode=tk.NONE)
         self.todo_list.pack(fill=tk.BOTH, expand=True, padx=10, pady=5)
 
-        ttk.Button(self, text="Done", style="success.TButton",command=self.mark_done).pack(side=tk.LEFT, padx=10, pady=10)
+        ttk.Button(self, text="Done", style="success.TButton",command=self.task_done).pack(side=tk.LEFT, padx=10, pady=10)
                    
-        ttk.Button(self, text="Delete", style="danger.TButton",command=self.delete_task).pack(side=tk.RIGHT, padx=10, pady=10)
+        ttk.Button(self, text="Delete", style="danger.TButton",command=self.remove_task).pack(side=tk.RIGHT, padx=10, pady=10)
                    
-        ttk.Button(self, text="View Stats", style="info.TButton",command=self.view_stats).pack(side=tk.BOTTOM, pady=10)
+        ttk.Button(self, text="View Stats", style="info.TButton",command=self.track_stats).pack(side=tk.BOTTOM, pady=10)
                    
         
         self.load_tasks()
     
-    def view_stats(self):
+    def track_stats(self):
         done_count = 0
         total_count = self.todo_list.size()
         for i in range(total_count):
@@ -56,24 +56,24 @@ class TodoListApp(tk.Tk):
             self.todo_input.delete(0, tk.END)
             self.save_tasks()
 
-    def mark_done(self):
+    def task_done(self):
         todo_index = self.todo_list.curselection()
         if todo_index:
             self.todo_list.itemconfig(todo_index, fg="green")
             self.save_tasks()
     
-    def delete_task(self):
+    def remove_task(self):
         todo_index = self.todo_list.curselection()
         if todo_index:
             self.todo_list.delete(todo_index)
             self.save_tasks()
     
-    def clear_placeholder(self, event):
+    def empty_placeholder(self, event):
         if self.todo_input.get() == "Enter your tasks here...":
             self.todo_input.delete(0, tk.END)
             self.todo_input.configure(style="TEntry")
 
-    def restore_placeholder(self, event):
+    def fill_placeholder(self, event):
         if self.todo_input.get() == "":
             self.todo_input.insert(0, "Enter your tasks here...")
             self.todo_input.configure(style="Custom.TEntry")
